@@ -415,6 +415,10 @@
       line-height: 1;
     }
 
+    .object-token.image-only .object-face .icon {
+      font-size: 64px;
+    }
+
     .object-face .name {
       min-height: 40px;
       display: grid;
@@ -423,6 +427,10 @@
       font-size: 17px;
       line-height: 1.18;
       word-break: keep-all;
+    }
+
+    .object-token.image-only .object-face .name {
+      display: none;
     }
 
     .bins {
@@ -879,18 +887,18 @@
         moving: true,
         allowEdgePause: true,
         objects: [
-          obj("나무 주걱", "🥄", "나무", "주걱은 나무로 만든 물체예요."),
-          obj("나무 의자", "🪑", "나무", "의자는 나무로 만들 수 있어요."),
-          obj("나무 야구방망이", "🏏", "나무", "야구방망이는 나무 물체예요."),
-          obj("금속 못", "🔩", "금속", "못은 단단한 금속으로 만들어요."),
-          obj("금속 가위", "✂️", "금속", "가위의 날은 금속이에요."),
-          obj("금속 종", "🔔", "금속", "종은 금속으로 만들어요."),
-          obj("유리잔", "🥛", "유리", "유리잔은 유리로 만든 물체예요."),
-          obj("유리병", "🍾", "유리", "유리병은 유리로 만들어요."),
-          obj("유리창", "🪟", "유리", "유리창의 투명한 판은 유리예요."),
-          obj("플라스틱 옷걸이", "🧥", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
-          obj("플라스틱 바구니", "🧺", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
-          obj("비닐봉지", "🛍️", "플라스틱", "비닐봉지는 플라스틱 물질로 만들어요.")
+          obj("주걱", "🥄", "나무", "주걱은 나무로 만든 물체예요."),
+          obj("의자", "🪑", "나무", "의자는 나무로 만들 수 있어요."),
+          obj("야구방망이", "🏏", "나무", "야구방망이는 나무 물체예요."),
+          obj("못", "🔩", "금속", "못은 단단한 금속으로 만들어요."),
+          obj("가위", "✂️", "금속", "가위의 날은 금속이에요."),
+          obj("종", "🔔", "금속", "종은 금속으로 만들어요."),
+          obj("잔", "🥛", "유리", "잔은 유리로 만든 물체예요."),
+          obj("병", "🍾", "유리", "병은 유리로 만들 수 있어요."),
+          obj("창문", "🪟", "유리", "창문의 투명한 판은 유리예요."),
+          obj("옷걸이", "🧥", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
+          obj("바구니", "🧺", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
+          obj("봉지", "🛍️", "플라스틱", "봉지는 플라스틱 물질로 만들 수 있어요.")
         ]
       },
       {
@@ -903,14 +911,14 @@
             materials: ["나무", "금속", "유리", "플라스틱"],
             speed: 6000,
             objects: [
-              obj("나무 젓가락", "🥢", "나무", "젓가락은 나무로 만들 수 있어요."),
-              obj("나무 책상", "🪵", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
-              obj("금속 열쇠", "🔑", "금속", "열쇠는 단단한 금속 물체예요."),
-              obj("금속 캔", "🥫", "금속", "캔은 얇은 금속으로 만들어요."),
-              obj("유리컵", "🥛", "유리", "유리컵은 유리로 만든 물체예요."),
-              obj("유리 전구", "💡", "유리", "전구의 겉부분은 유리로 만들어요."),
-              obj("플라스틱 장난감", "🧩", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
-              obj("플라스틱 물병", "🧴", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요.")
+              obj("젓가락", "🥢", "나무", "젓가락은 나무로 만들 수 있어요."),
+              obj("책상", "🪵", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
+              obj("열쇠", "🔑", "금속", "열쇠는 단단한 금속 물체예요."),
+              obj("캔", "🥫", "금속", "캔은 얇은 금속으로 만들어요."),
+              obj("컵", "🥛", "유리", "컵은 유리로 만든 물체예요."),
+              obj("전구", "💡", "유리", "전구의 겉부분은 유리로 만들어요."),
+              obj("장난감", "🧩", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
+              obj("물병", "🧴", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요.")
             ]
           },
           {
@@ -920,14 +928,14 @@
             lightningFrom: 4,
             lightningSpeed: 4000,
             objects: [
-              obj("고무 지우개", "🧽", "고무", "지우개는 고무 물질로 만들어요."),
-              obj("고무줄", "➰", "고무", "고무줄은 잘 늘어나는 고무예요."),
-              obj("가죽 구두", "👞", "가죽", "구두는 가죽으로 만들 수 있어요."),
-              obj("가죽 가방", "👜", "가죽", "가방은 가죽으로 만들 수 있어요."),
-              obj("종이 공책", "📓", "종이", "공책은 여러 장의 종이로 만들어요."),
-              obj("종이 상자", "📦", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
-              obj("밀가루 봉지", "🌾", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
-              obj("밀가루 반죽", "🥣", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
+              obj("지우개", "🧽", "고무", "지우개는 고무 물질로 만들어요."),
+              obj("줄", "➰", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
+              obj("구두", "👞", "가죽", "구두는 가죽으로 만들 수 있어요."),
+              obj("가방", "👜", "가죽", "가방은 가죽으로 만들 수 있어요."),
+              obj("공책", "📓", "종이", "공책은 여러 장의 종이로 만들어요."),
+              obj("상자", "📦", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
+              obj("하얀 가루 봉지", "🌾", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
+              obj("반죽", "🥣", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
             ]
           }
         ]
@@ -1019,6 +1027,10 @@
       return activeRound().materials || activeStage().materials;
     }
 
+    function shouldShowNameOnBelt() {
+      return activeStage().name === "1단계";
+    }
+
     function tokenBounds() {
       const zone = els.beltZone.getBoundingClientRect();
       const token = els.token.getBoundingClientRect();
@@ -1058,6 +1070,7 @@
 
     function resetTokenVisual() {
       els.token.classList.remove("selected", "timeout");
+      els.token.classList.toggle("image-only", !shouldShowNameOnBelt());
       els.token.style.top = "";
       setTokenX(tokenBounds().start);
       setConveyorMotion("stopped");
@@ -1155,6 +1168,8 @@
       const item = currentItem();
       els.objectIcon.textContent = item.icon;
       els.objectName.textContent = item.name;
+      els.objectName.setAttribute("aria-hidden", shouldShowNameOnBelt() ? "false" : "true");
+      els.token.setAttribute("aria-label", shouldShowNameOnBelt() ? `현재 물체 선택: ${item.name}` : "현재 물체 선택");
       els.selectedName.textContent = "물체를 선택해 보세요.";
       els.questionText.textContent = "이 물체는 주로 어떤 물질로 만들었을까요?";
       setFeedback(activeStage().stageIndex === 0 ? "물체가 가운데에 멈추면 선택해 보세요." : "움직이는 물체를 잡고 알맞은 상자를 눌러요.");
