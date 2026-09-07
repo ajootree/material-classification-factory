@@ -206,6 +206,7 @@
 
     .machine {
       position: absolute;
+      z-index: 2;
       top: 30px;
       left: 18px;
       width: 92px;
@@ -249,6 +250,7 @@
 
     .belt {
       position: absolute;
+      z-index: 1;
       left: 72px;
       right: 24px;
       top: 164px;
@@ -261,10 +263,6 @@
       background-size: 92px 100%;
       overflow: hidden;
       box-shadow: inset 0 10px 0 rgba(255, 255, 255, 0.18), inset 0 -10px 0 rgba(61, 49, 82, 0.18);
-    }
-
-    .belt::after {
-      z-index: 2;
     }
 
     .belt::before,
@@ -292,6 +290,7 @@
 
     .belt-speed-lines {
       position: absolute;
+      z-index: 2;
       left: 96px;
       right: 48px;
       top: 130px;
@@ -395,8 +394,25 @@
       }
     }
 
+    @keyframes edgeBlink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.34;
+      }
+    }
+
+    @keyframes edgeVanish {
+      to {
+        opacity: 0;
+      }
+    }
+
     .center-line {
+      display: none;
       position: absolute;
+      z-index: 3;
       top: 132px;
       bottom: 34px;
       left: 50%;
@@ -406,8 +422,13 @@
       pointer-events: none;
     }
 
+    .belt-zone.show-center-line .center-line {
+      display: block;
+    }
+
     .object-token {
       position: absolute;
+      z-index: 4;
       top: 152px;
       left: 0;
       width: clamp(116px, 18vw, 154px);
@@ -433,6 +454,10 @@
 
     .object-token.timeout {
       outline: 5px solid rgba(245, 158, 66, 0.35);
+    }
+
+    .object-token.edge-fading {
+      animation: edgeBlink 340ms ease-in-out 6, edgeVanish 260ms ease 1740ms forwards;
     }
 
     .object-token.fly-to-bin {
@@ -1232,6 +1257,7 @@
       tokenStart: 0,
       duration: 0,
       raf: null,
+      edgeTimer: null,
       currentItems: [],
       completed: [],
       wrongObjects: [],
@@ -1384,8 +1410,16 @@
       }
     }
 
+    function clearEdgeTimer() {
+      if (state.edgeTimer) {
+        window.clearTimeout(state.edgeTimer);
+        state.edgeTimer = null;
+      }
+    }
+
     function resetTokenVisual() {
-      els.token.classList.remove("selected", "timeout", "fly-to-bin");
+      clearEdgeTimer();
+      els.token.classList.remove("selected", "timeout", "edge-fading", "fly-to-bin");
       els.token.style.removeProperty("--fly-x");
       els.token.style.removeProperty("--fly-y");
       els.token.classList.toggle("image-only", !shouldShowNameOnBelt());
@@ -1444,6 +1478,7 @@
       const duration = getDurationForCurrentItem();
       els.speedName.textContent = duration ? `${Math.round(duration / 1000)}초` : "멈춤";
       els.hintButton.disabled = stage.stageIndex === 0;
+      els.beltZone.classList.toggle("show-center-line", stage.stageIndex === 0);
     }
 
     function getDurationForCurrentItem() {
@@ -1459,6 +1494,7 @@
     }
 
     function startGame() {
+      clearEdgeTimer();
       state.started = true;
       state.stageIndex = 0;
       state.roundIndex = 0;
@@ -1489,6 +1525,7 @@
 
     function nextItem() {
       cancelAnimationFrame(state.raf);
+      clearEdgeTimer();
       state.itemIndex += 1;
       state.selected = false;
       state.animating = false;
@@ -1558,9 +1595,17 @@
     function pauseAtEdge() {
       state.running = false;
       state.pausedAtEdge = true;
-      els.token.classList.add("timeout");
+      els.token.classList.add("timeout", "edge-fading");
       setConveyorMotion("stopped");
-      setFeedback("화면 끝에 왔어요. 천천히 다시 선택해 보세요.", "try");
+      setFeedback("끝까지 갔어요. 잠깐 깜빡인 뒤 다시 나타나요.", "try");
+      state.edgeTimer = window.setTimeout(() => {
+        state.edgeTimer = null;
+        state.selected = false;
+        state.pausedAtEdge = false;
+        resetTokenVisual();
+        setFeedback("다시 왼쪽에서 나와요. 움직이는 물체를 잡고 분류해 보세요.", "try");
+        runConveyor();
+      }, 2000);
     }
 
     function selectCurrent() {
@@ -1570,10 +1615,12 @@
       }
       const item = currentItem();
       if (!item) return;
+      clearEdgeTimer();
       state.selected = true;
       state.running = false;
       cancelAnimationFrame(state.raf);
       setConveyorMotion("stopped");
+      els.token.classList.remove("timeout", "edge-fading");
       els.token.classList.add("selected");
       els.selectedName.textContent = `선택한 물체: ${item.name}`;
       setFeedback("선택했어요. 알맞은 물질 상자에 넣어 보세요.");
