@@ -436,13 +436,19 @@
       padding: 8px;
     }
 
-    .object-face .icon {
-      font-size: 48px;
-      line-height: 1;
+    .item-art {
+      width: 76px;
+      height: 66px;
+      border-radius: 8px;
+      background-image: url("assets/object-sprites.png");
+      background-repeat: no-repeat;
+      background-size: 600% 500%;
+      filter: drop-shadow(0 7px 7px rgba(61, 49, 82, 0.18));
     }
 
-    .object-token.image-only .object-face .icon {
-      font-size: 64px;
+    .object-token.image-only .item-art {
+      width: 114px;
+      height: 98px;
     }
 
     .object-face .name {
@@ -702,8 +708,22 @@
     }
 
     .review-card strong {
-      display: block;
-      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+      color: var(--ink);
+    }
+
+    .review-art {
+      flex: 0 0 auto;
+      width: 46px;
+      height: 40px;
+      border-radius: 7px;
+      background-image: url("assets/object-sprites.png");
+      background-repeat: no-repeat;
+      background-size: 600% 500%;
+      filter: drop-shadow(0 4px 4px rgba(61, 49, 82, 0.16));
     }
 
     .modal {
@@ -891,7 +911,7 @@
           <div class="center-line" aria-hidden="true"></div>
           <button class="object-token" id="objectToken" type="button" aria-label="현재 물체 선택">
             <span class="object-face">
-              <span class="icon" id="objectIcon">🥄</span>
+              <span class="item-art" id="objectIcon" aria-hidden="true"></span>
               <span class="name" id="objectName">금속 숟가락</span>
             </span>
           </button>
@@ -946,6 +966,41 @@
       "밀가루": "#ece5d8"
     };
 
+    const spriteCols = 6;
+    const spriteRows = 5;
+    const spriteIndexes = {
+      woodenSpatula: 0,
+      metalSpoon: 1,
+      woodenPencil: 2,
+      metalNail: 3,
+      woodenChair: 4,
+      metalScissors: 5,
+      woodenBaseballBat: 6,
+      metalBell: 7,
+      glassTumbler: 8,
+      glassBottle: 9,
+      glassWindow: 10,
+      plasticHanger: 11,
+      plasticBasket: 12,
+      plasticBag: 13,
+      woodenChopsticks: 14,
+      woodenDesk: 15,
+      metalKey: 16,
+      metalCan: 17,
+      glassCup: 18,
+      glassLightBulb: 19,
+      plasticToy: 20,
+      plasticBottle: 21,
+      rubberEraser: 22,
+      rubberBand: 23,
+      leatherShoe: 24,
+      leatherBag: 25,
+      paperNotebook: 26,
+      paperBox: 27,
+      flourBag: 28,
+      doughBowl: 29
+    };
+
     const stages = [
       {
         name: "1단계",
@@ -956,14 +1011,14 @@
         speed: 0,
         centerStop: true,
         objects: [
-          obj("나무 주걱", "🥄", "나무", "주걱은 나무로 만든 물체예요."),
-          obj("금속 숟가락", "🥄", "금속", "숟가락은 금속으로 만들었어요."),
-          obj("나무 연필", "✏️", "나무", "연필의 몸통은 주로 나무로 만들어요."),
-          obj("금속 못", "🔩", "금속", "못은 단단한 금속으로 만들어요."),
-          obj("나무 의자", "🪑", "나무", "의자는 나무로 만들 수 있어요."),
-          obj("금속 가위", "✂️", "금속", "가위의 날은 금속으로 만들어요."),
-          obj("나무 야구방망이", "🏏", "나무", "야구방망이는 나무로 만든 물체예요."),
-          obj("금속 종", "🔔", "금속", "종은 소리가 잘 나는 금속으로 만들어요.")
+          obj("나무 주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
+          obj("금속 숟가락", "metalSpoon", "금속", "숟가락은 금속으로 만들었어요."),
+          obj("나무 연필", "woodenPencil", "나무", "연필의 몸통은 주로 나무로 만들어요."),
+          obj("금속 못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
+          obj("나무 의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
+          obj("금속 가위", "metalScissors", "금속", "가위의 날은 금속으로 만들어요."),
+          obj("나무 야구방망이", "woodenBaseballBat", "나무", "야구방망이는 나무로 만든 물체예요."),
+          obj("금속 종", "metalBell", "금속", "종은 소리가 잘 나는 금속으로 만들어요.")
         ]
       },
       {
@@ -976,18 +1031,18 @@
         moving: true,
         allowEdgePause: true,
         objects: [
-          obj("주걱", "🥄", "나무", "주걱은 나무로 만든 물체예요."),
-          obj("의자", "🪑", "나무", "의자는 나무로 만들 수 있어요."),
-          obj("야구방망이", "🏏", "나무", "야구방망이는 나무 물체예요."),
-          obj("못", "🔩", "금속", "못은 단단한 금속으로 만들어요."),
-          obj("가위", "✂️", "금속", "가위의 날은 금속이에요."),
-          obj("종", "🔔", "금속", "종은 금속으로 만들어요."),
-          obj("잔", "🥛", "유리", "잔은 유리로 만든 물체예요."),
-          obj("병", "🍾", "유리", "병은 유리로 만들 수 있어요."),
-          obj("창문", "🪟", "유리", "창문의 투명한 판은 유리예요."),
-          obj("옷걸이", "🧥", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
-          obj("바구니", "🧺", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
-          obj("봉지", "🛍️", "플라스틱", "봉지는 플라스틱 물질로 만들 수 있어요.")
+          obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
+          obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
+          obj("야구방망이", "woodenBaseballBat", "나무", "야구방망이는 나무 물체예요."),
+          obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
+          obj("가위", "metalScissors", "금속", "가위의 날은 금속이에요."),
+          obj("종", "metalBell", "금속", "종은 금속으로 만들어요."),
+          obj("잔", "glassTumbler", "유리", "잔은 유리로 만든 물체예요."),
+          obj("병", "glassBottle", "유리", "병은 유리로 만들 수 있어요."),
+          obj("창문", "glassWindow", "유리", "창문의 투명한 판은 유리예요."),
+          obj("옷걸이", "plasticHanger", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
+          obj("바구니", "plasticBasket", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
+          obj("봉지", "plasticBag", "플라스틱", "봉지는 플라스틱 물질로 만들 수 있어요.")
         ]
       },
       {
@@ -1000,14 +1055,14 @@
             materials: ["나무", "금속", "유리", "플라스틱"],
             speed: 6000,
             objects: [
-              obj("젓가락", "🥢", "나무", "젓가락은 나무로 만들 수 있어요."),
-              obj("책상", "🪵", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
-              obj("열쇠", "🔑", "금속", "열쇠는 단단한 금속 물체예요."),
-              obj("캔", "🥫", "금속", "캔은 얇은 금속으로 만들어요."),
-              obj("컵", "🥛", "유리", "컵은 유리로 만든 물체예요."),
-              obj("전구", "💡", "유리", "전구의 겉부분은 유리로 만들어요."),
-              obj("장난감", "🧩", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
-              obj("물병", "🧴", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요.")
+              obj("젓가락", "woodenChopsticks", "나무", "젓가락은 나무로 만들 수 있어요."),
+              obj("책상", "woodenDesk", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
+              obj("열쇠", "metalKey", "금속", "열쇠는 단단한 금속 물체예요."),
+              obj("캔", "metalCan", "금속", "캔은 얇은 금속으로 만들어요."),
+              obj("컵", "glassCup", "유리", "컵은 유리로 만든 물체예요."),
+              obj("전구", "glassLightBulb", "유리", "전구의 겉부분은 유리로 만들어요."),
+              obj("장난감", "plasticToy", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
+              obj("물병", "plasticBottle", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요.")
             ]
           },
           {
@@ -1017,14 +1072,14 @@
             lightningFrom: 4,
             lightningSpeed: 4000,
             objects: [
-              obj("지우개", "🧽", "고무", "지우개는 고무 물질로 만들어요."),
-              obj("줄", "➰", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
-              obj("구두", "👞", "가죽", "구두는 가죽으로 만들 수 있어요."),
-              obj("가방", "👜", "가죽", "가방은 가죽으로 만들 수 있어요."),
-              obj("공책", "📓", "종이", "공책은 여러 장의 종이로 만들어요."),
-              obj("상자", "📦", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
-              obj("하얀 가루 봉지", "🌾", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
-              obj("반죽", "🥣", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
+              obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
+              obj("줄", "rubberBand", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
+              obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
+              obj("가방", "leatherBag", "가죽", "가방은 가죽으로 만들 수 있어요."),
+              obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
+              obj("상자", "paperBox", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
+              obj("하얀 가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
+              obj("반죽", "doughBowl", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
             ]
           }
         ]
@@ -1091,8 +1146,21 @@
       modalBody: document.getElementById("modalBody")
     };
 
-    function obj(name, icon, material, explanation) {
-      return { name, icon, material, explanation };
+    function obj(name, artKey, material, explanation) {
+      return { name, artKey, spriteIndex: spriteIndexes[artKey], material, explanation };
+    }
+
+    function spritePosition(item) {
+      const index = item.spriteIndex || 0;
+      const col = index % spriteCols;
+      const row = Math.floor(index / spriteCols);
+      const x = spriteCols === 1 ? 0 : (col / (spriteCols - 1)) * 100;
+      const y = spriteRows === 1 ? 0 : (row / (spriteRows - 1)) * 100;
+      return `${x}% ${y}%`;
+    }
+
+    function setItemArt(element, item) {
+      element.style.backgroundPosition = spritePosition(item);
     }
 
     function activeStage() {
@@ -1261,7 +1329,7 @@
       }
 
       const item = currentItem();
-      els.objectIcon.textContent = item.icon;
+      setItemArt(els.objectIcon, item);
       els.objectName.textContent = item.name;
       els.objectName.setAttribute("aria-hidden", shouldShowNameOnBelt() ? "false" : "true");
       els.token.setAttribute("aria-label", shouldShowNameOnBelt() ? `현재 물체 선택: ${item.name}` : "현재 물체 선택");
@@ -1334,7 +1402,7 @@
       cancelAnimationFrame(state.raf);
       setConveyorMotion("stopped");
       els.token.classList.add("selected");
-      els.selectedName.textContent = `${item.icon} ${item.name}`;
+      els.selectedName.textContent = `선택한 물체: ${item.name}`;
       setFeedback("선택했어요. 알맞은 물질 상자에 넣어 보세요.");
     }
 
@@ -1494,7 +1562,7 @@
     function reviewCard(item) {
       return `
         <div class="review-card">
-          <strong>${item.icon} ${item.name} → ${item.material}</strong>
+          <strong><span class="review-art" style="background-position: ${spritePosition(item)}" aria-hidden="true"></span>${item.name} → ${item.material}</strong>
           ${item.name}은 겉모습만 보고 분류하는 것이 아니라, ${item.material}로 만들어졌기 때문에 ${item.material}로 분류해요.
         </div>
       `;
