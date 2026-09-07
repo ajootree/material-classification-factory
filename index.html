@@ -162,6 +162,25 @@
         linear-gradient(90deg, rgba(48, 164, 108, 0.08), rgba(37, 99, 235, 0.08));
     }
 
+    .belt-zone::before {
+      content: "";
+      position: absolute;
+      top: 26px;
+      right: 28px;
+      width: 18px;
+      height: 18px;
+      border: 3px solid #425466;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 0 rgba(217, 65, 65, 0.32);
+      opacity: 0.45;
+    }
+
+    .belt-zone.conveyor-running::before {
+      opacity: 1;
+      animation: warningPulse 720ms ease-in-out infinite;
+    }
+
     .machine {
       position: absolute;
       top: 30px;
@@ -206,9 +225,14 @@
       border: 4px solid #425466;
       border-radius: 999px;
       background:
-        repeating-linear-gradient(90deg, #64748b 0 34px, #526174 34px 42px),
+        repeating-linear-gradient(90deg, #7b8797 0 28px, #526174 28px 40px, #3f4b5c 40px 46px),
         #64748b;
+      background-size: 92px 100%;
       overflow: hidden;
+    }
+
+    .belt::after {
+      z-index: 2;
     }
 
     .belt::before,
@@ -220,7 +244,10 @@
       height: 72px;
       border-radius: 50%;
       border: 8px solid #334155;
-      background: #e2e8f0;
+      background:
+        linear-gradient(90deg, transparent 42%, #334155 42% 58%, transparent 58%),
+        linear-gradient(0deg, transparent 42%, #334155 42% 58%, transparent 58%),
+        radial-gradient(circle, #ffffff 0 18%, #e2e8f0 19% 56%, #94a3b8 57% 100%);
     }
 
     .belt::before {
@@ -229,6 +256,111 @@
 
     .belt::after {
       right: 18px;
+    }
+
+    .belt-speed-lines {
+      position: absolute;
+      left: 96px;
+      right: 48px;
+      top: 130px;
+      height: 34px;
+      pointer-events: none;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .belt-speed-lines span {
+      position: absolute;
+      width: 70px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.22);
+      transform: translateX(-90px);
+    }
+
+    .belt-speed-lines span:nth-child(1) {
+      top: 2px;
+      left: 18%;
+    }
+
+    .belt-speed-lines span:nth-child(2) {
+      top: 14px;
+      left: 48%;
+      width: 92px;
+    }
+
+    .belt-speed-lines span:nth-child(3) {
+      top: 26px;
+      left: 72%;
+      width: 56px;
+    }
+
+    .belt-zone.conveyor-running .belt {
+      animation: beltTravel 780ms linear infinite;
+    }
+
+    .belt-zone.conveyor-running .belt::before,
+    .belt-zone.conveyor-running .belt::after {
+      animation: rollerSpin 780ms linear infinite;
+    }
+
+    .belt-zone.conveyor-running .belt-speed-lines {
+      opacity: 1;
+    }
+
+    .belt-zone.conveyor-running .belt-speed-lines span {
+      animation: speedLine 900ms linear infinite;
+    }
+
+    .belt-zone.conveyor-fast .belt,
+    .belt-zone.conveyor-fast .belt::before,
+    .belt-zone.conveyor-fast .belt::after {
+      animation-duration: 520ms;
+    }
+
+    .belt-zone.conveyor-fast .belt-speed-lines span {
+      animation-duration: 620ms;
+      background: rgba(245, 158, 66, 0.36);
+    }
+
+    .belt-zone.conveyor-stopped .belt {
+      background-position: 0 0;
+    }
+
+    @keyframes beltTravel {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: 92px 0;
+      }
+    }
+
+    @keyframes rollerSpin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes speedLine {
+      from {
+        transform: translateX(-110px);
+      }
+      to {
+        transform: translateX(210px);
+      }
+    }
+
+    @keyframes warningPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(217, 65, 65, 0.32);
+      }
+      50% {
+        box-shadow: 0 0 0 9px rgba(217, 65, 65, 0);
+      }
     }
 
     .center-line {
@@ -658,6 +790,7 @@
         <div class="belt-zone" id="beltZone">
           <div class="machine" aria-hidden="true"></div>
           <div class="belt" aria-hidden="true"></div>
+          <div class="belt-speed-lines" aria-hidden="true"><span></span><span></span><span></span></div>
           <div class="center-line" aria-hidden="true"></div>
           <button class="object-token" id="objectToken" type="button" aria-label="현재 물체 선택">
             <span class="object-face">
@@ -818,6 +951,7 @@
       currentAttempts: 0,
       selected: false,
       running: false,
+      stopAtCenter: false,
       pausedAtEdge: false,
       started: false,
       tokenX: 0,
@@ -911,10 +1045,22 @@
       els.token.style.transform = `translateX(${x}px)`;
     }
 
+    function setConveyorMotion(mode = "stopped") {
+      els.beltZone.classList.remove("conveyor-running", "conveyor-fast", "conveyor-stopped");
+      if (mode === "running") {
+        els.beltZone.classList.add("conveyor-running");
+      } else if (mode === "fast") {
+        els.beltZone.classList.add("conveyor-running", "conveyor-fast");
+      } else {
+        els.beltZone.classList.add("conveyor-stopped");
+      }
+    }
+
     function resetTokenVisual() {
       els.token.classList.remove("selected", "timeout");
       els.token.style.top = "";
       setTokenX(tokenBounds().start);
+      setConveyorMotion("stopped");
     }
 
     function renderBins() {
@@ -998,6 +1144,7 @@
       state.itemIndex += 1;
       state.selected = false;
       state.pausedAtEdge = false;
+      state.stopAtCenter = false;
       state.currentAttempts = 0;
       const items = activeItems();
       if (state.itemIndex >= items.length) {
@@ -1022,13 +1169,18 @@
       const duration = getDurationForCurrentItem();
       const bounds = tokenBounds();
       if (!duration) {
-        setTokenX(bounds.center);
-        state.running = false;
+        state.duration = 1500;
+        state.tokenStart = performance.now();
+        state.stopAtCenter = true;
+        state.running = true;
+        setConveyorMotion("running");
+        tick();
         return;
       }
       state.duration = duration;
       state.tokenStart = performance.now();
       state.running = true;
+      setConveyorMotion(duration <= 5200 ? "fast" : "running");
       tick();
     }
 
@@ -1036,9 +1188,16 @@
       if (!state.running || state.selected) return;
       const bounds = tokenBounds();
       const progress = Math.min(1, (now - state.tokenStart) / state.duration);
-      const x = bounds.start + (bounds.end - bounds.start) * progress;
+      const target = state.stopAtCenter ? bounds.center : bounds.end;
+      const x = bounds.start + (target - bounds.start) * progress;
       setTokenX(x);
       if (progress >= 1) {
+        if (state.stopAtCenter) {
+          state.running = false;
+          setConveyorMotion("stopped");
+          setFeedback("물체가 가운데에 멈췄어요. 물체를 선택해 보세요.");
+          return;
+        }
         pauseAtEdge();
         return;
       }
@@ -1049,6 +1208,7 @@
       state.running = false;
       state.pausedAtEdge = true;
       els.token.classList.add("timeout");
+      setConveyorMotion("stopped");
       setFeedback("화면 끝에 왔어요. 천천히 다시 선택해 보세요.", "try");
     }
 
@@ -1062,6 +1222,7 @@
       state.selected = true;
       state.running = false;
       cancelAnimationFrame(state.raf);
+      setConveyorMotion("stopped");
       els.token.classList.add("selected");
       els.selectedName.textContent = `${item.icon} ${item.name}`;
       setFeedback("선택했어요. 알맞은 물질 상자에 넣어 보세요.");
