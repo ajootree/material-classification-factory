@@ -502,6 +502,11 @@
       transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
     }
 
+    .bins.many .bin {
+      min-height: 86px;
+      font-size: 17px;
+    }
+
     .bin::before {
       content: "";
       position: absolute;
@@ -954,6 +959,12 @@
 
       .bins {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .bins.many .bin {
+        min-height: 74px;
       }
 
       .belt-zone {
@@ -1133,64 +1144,65 @@
       {
         name: "2단계",
         goal: "여러 물질을 비교하여 스스로 분류해요.",
-        mode: "천천히 이동",
-        materials: ["나무", "금속", "유리", "플라스틱"],
-        passFirstTry: 8,
-        speed: 8200,
-        moving: true,
-        allowEdgePause: true,
-        objects: [
-          obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
-          obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
-          obj("야구방망이", "woodenBaseballBat", "나무", "야구방망이는 나무 물체예요."),
-          obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
-          obj("가위", "metalScissors", "금속", "가위의 날은 금속이에요."),
-          obj("종", "metalBell", "금속", "종은 금속으로 만들어요."),
-          obj("잔", "glassTumbler", "유리", "잔은 유리로 만든 물체예요."),
-          obj("병", "glassBottle", "유리", "병은 유리로 만들 수 있어요."),
-          obj("창문", "glassWindow", "유리", "창문의 투명한 판은 유리예요."),
-          obj("옷걸이", "plasticHanger", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
-          obj("바구니", "plasticBasket", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
-          obj("봉지", "plasticBag", "플라스틱", "봉지는 플라스틱 물질로 만들 수 있어요.")
+        mode: "4개씩 두 번",
+        passFirstTry: 6,
+        rounds: [
+          {
+            name: "1라운드",
+            materials: ["나무", "금속", "유리", "플라스틱"],
+            speed: 8200,
+            moving: true,
+            allowEdgePause: true,
+            objects: [
+              obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
+              obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
+              obj("잔", "glassTumbler", "유리", "잔은 유리로 만든 물체예요."),
+              obj("옷걸이", "plasticHanger", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요.")
+            ]
+          },
+          {
+            name: "2라운드",
+            materials: ["나무", "금속", "유리", "플라스틱"],
+            speed: 7600,
+            moving: true,
+            allowEdgePause: true,
+            objects: [
+              obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
+              obj("가위", "metalScissors", "금속", "가위의 날은 금속이에요."),
+              obj("병", "glassBottle", "유리", "병은 유리로 만들 수 있어요."),
+              obj("바구니", "plasticBasket", "플라스틱", "바구니는 가벼운 플라스틱 물체예요.")
+            ]
+          }
         ]
       },
       {
         name: "3단계",
         goal: "배운 모든 물질을 빠르고 정확하게 구별해요.",
-        mode: "점점 빨라짐",
-        rounds: [
-          {
-            name: "1라운드",
-            materials: ["나무", "금속", "유리", "플라스틱"],
-            speed: 6000,
-            objects: [
-              obj("젓가락", "woodenChopsticks", "나무", "젓가락은 나무로 만들 수 있어요."),
-              obj("책상", "woodenDesk", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
-              obj("열쇠", "metalKey", "금속", "열쇠는 단단한 금속 물체예요."),
-              obj("캔", "metalCan", "금속", "캔은 얇은 금속으로 만들어요."),
-              obj("컵", "glassCup", "유리", "컵은 유리로 만든 물체예요."),
-              obj("전구", "glassLightBulb", "유리", "전구의 겉부분은 유리로 만들어요."),
-              obj("장난감", "plasticToy", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
-              obj("물병", "plasticBottle", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요.")
-            ]
-          },
-          {
-            name: "2라운드",
-            materials: ["고무", "가죽", "종이", "밀가루"],
-            speed: 5200,
-            lightningFrom: 4,
-            lightningSpeed: 4000,
-            objects: [
-              obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
-              obj("줄", "rubberBand", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
-              obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
-              obj("가방", "leatherBag", "가죽", "가방은 가죽으로 만들 수 있어요."),
-              obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
-              obj("상자", "paperBox", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
-              obj("하얀 가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
-              obj("반죽", "doughBowl", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
-            ]
-          }
+        mode: "8종류 한 번에",
+        roundLabel: "종합판",
+        materials: ["나무", "금속", "유리", "플라스틱", "고무", "가죽", "종이", "밀가루"],
+        speed: 6000,
+        moving: true,
+        allowEdgePause: true,
+        lightningFrom: 12,
+        lightningSpeed: 4000,
+        objects: [
+          obj("젓가락", "woodenChopsticks", "나무", "젓가락은 나무로 만들 수 있어요."),
+          obj("책상", "woodenDesk", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
+          obj("열쇠", "metalKey", "금속", "열쇠는 단단한 금속 물체예요."),
+          obj("캔", "metalCan", "금속", "캔은 얇은 금속으로 만들어요."),
+          obj("컵", "glassCup", "유리", "컵은 유리로 만든 물체예요."),
+          obj("전구", "glassLightBulb", "유리", "전구의 겉부분은 유리로 만들어요."),
+          obj("장난감", "plasticToy", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
+          obj("물병", "plasticBottle", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요."),
+          obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
+          obj("줄", "rubberBand", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
+          obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
+          obj("가방", "leatherBag", "가죽", "가방은 가죽으로 만들 수 있어요."),
+          obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
+          obj("상자", "paperBox", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
+          obj("하얀 가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
+          obj("반죽", "doughBowl", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
         ]
       }
     ];
@@ -1226,6 +1238,7 @@
       materialStats: {},
       finalWrongObjects: [],
       finalStats: {},
+      stage2FirstTryCount: 0,
       stage3FirstTryCount: 0,
       masteredMaterials: new Set(),
       drag: null
@@ -1385,6 +1398,7 @@
     function renderBins() {
       els.bins.innerHTML = "";
       const materials = currentMaterials();
+      els.bins.classList.toggle("many", materials.length > 4);
       els.bins.style.gridTemplateColumns = `repeat(${binColumnCount(materials.length)}, minmax(0, 1fr))`;
       materials.forEach((material) => {
         const bin = document.createElement("button");
@@ -1426,7 +1440,7 @@
       els.stageGoal.textContent = stage.goal;
       els.stageName.textContent = stage.name;
       els.stageMode.textContent = stage.mode;
-      els.roundName.textContent = stage.rounds ? round.name : "연습판";
+      els.roundName.textContent = stage.rounds ? round.name : (stage.roundLabel || "연습판");
       const duration = getDurationForCurrentItem();
       els.speedName.textContent = duration ? `${Math.round(duration / 1000)}초` : "멈춤";
       els.hintButton.disabled = stage.stageIndex === 0;
@@ -1436,10 +1450,11 @@
       const stage = activeStage();
       const round = activeRound();
       if (!stage.moving && !stage.rounds) return 0;
-      if (stage.rounds && round.lightningFrom !== undefined && state.itemIndex >= round.lightningFrom) {
+      if (round.lightningFrom !== undefined && state.itemIndex >= round.lightningFrom) {
         return round.lightningSpeed;
       }
-      if (stage.stageIndex === 1 && state.streak >= 3) return Math.max(6200, stage.speed - 1200);
+      const baseSpeed = round.speed || stage.speed || 0;
+      if (stage.stageIndex === 1 && state.streak >= 3) return Math.max(6200, baseSpeed - 1200);
       return round.speed || stage.speed || 0;
     }
 
@@ -1454,6 +1469,7 @@
       state.materialStats = {};
       state.finalWrongObjects = [];
       state.finalStats = {};
+      state.stage2FirstTryCount = 0;
       state.stage3FirstTryCount = 0;
       state.masteredMaterials = new Set();
       state.currentItems = [];
@@ -1599,6 +1615,9 @@
       state.materialStats[item.material].total += 1;
       if (firstTry) state.materialStats[item.material].first += 1;
       if (!firstTry) state.materialStats[item.material].wrong += 1;
+      if (stage.name === "2단계" && firstTry) {
+        state.stage2FirstTryCount += 1;
+      }
       if (stage.name === "3단계") {
         if (!state.finalStats[item.material]) state.finalStats[item.material] = { total: 0, first: 0, wrong: 0 };
         state.finalStats[item.material].total += 1;
@@ -1684,7 +1703,7 @@
         return;
       }
       if (stage.name === "2단계") {
-        const firstTryInStage = state.completed.filter((item) => item && item.firstTry).length;
+        const firstTryInStage = state.stage2FirstTryCount;
         state.stageIndex = 2;
         state.roundIndex = 0;
         if (firstTryInStage >= stage.passFirstTry) {
@@ -1737,7 +1756,7 @@
     }
 
     function finishGame() {
-      const totalStage3 = stages[2].rounds.reduce((sum, round) => sum + round.objects.length, 0);
+      const totalStage3 = stages[2].objects.length;
       const firstTryStage3 = state.stage3FirstTryCount;
       const allMaterials = ["나무", "금속", "유리", "플라스틱", "고무", "가죽", "종이", "밀가루"];
       const strong = [];
