@@ -402,6 +402,12 @@
       outline: 5px solid rgba(245, 158, 66, 0.35);
     }
 
+    .object-token.fly-to-bin {
+      animation: cardIntoBin 720ms cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+      pointer-events: none;
+      z-index: 5;
+    }
+
     .object-face {
       display: grid;
       gap: 8px;
@@ -471,12 +477,45 @@
       box-shadow: 0 10px 0 rgba(34, 49, 63, 0.12);
     }
 
+    .bin.catching {
+      animation: binCatch 720ms ease both;
+    }
+
     .bin-label {
       display: grid;
       min-height: 94px;
       place-items: center;
       padding-top: 24px;
       text-align: center;
+    }
+
+    @keyframes cardIntoBin {
+      0% {
+        opacity: 1;
+        transform: translateX(var(--token-x, 0px)) scale(1) rotate(0deg);
+      }
+      58% {
+        opacity: 1;
+        transform: translate(var(--fly-x, 0px), calc(var(--fly-y, 0px) - 18px)) scale(0.78) rotate(5deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--fly-x, 0px), var(--fly-y, 0px)) scale(0.24) rotate(10deg);
+      }
+    }
+
+    @keyframes binCatch {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 0 rgba(34, 49, 63, 0);
+      }
+      42% {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 0 rgba(34, 49, 63, 0.16);
+      }
+      70% {
+        transform: translateY(2px) scale(0.99);
+      }
     }
 
     .panel {
@@ -959,6 +998,7 @@
       currentAttempts: 0,
       selected: false,
       running: false,
+      animating: false,
       stopAtCenter: false,
       pausedAtEdge: false,
       started: false,
@@ -1054,6 +1094,7 @@
 
     function setTokenX(x) {
       state.tokenX = x;
+      els.token.style.setProperty("--token-x", `${x}px`);
       els.token.style.transform = `translateX(${x}px)`;
     }
 
@@ -1069,9 +1110,12 @@
     }
 
     function resetTokenVisual() {
-      els.token.classList.remove("selected", "timeout");
+      els.token.classList.remove("selected", "timeout", "fly-to-bin");
+      els.token.style.removeProperty("--fly-x");
+      els.token.style.removeProperty("--fly-y");
       els.token.classList.toggle("image-only", !shouldShowNameOnBelt());
       els.token.style.top = "";
+      els.token.style.opacity = "";
       setTokenX(tokenBounds().start);
       setConveyorMotion("stopped");
     }
@@ -1156,6 +1200,7 @@
       cancelAnimationFrame(state.raf);
       state.itemIndex += 1;
       state.selected = false;
+      state.animating = false;
       state.pausedAtEdge = false;
       state.stopAtCenter = false;
       state.currentAttempts = 0;
@@ -1244,7 +1289,7 @@
     }
 
     function chooseMaterial(material) {
-      if (!state.started || !currentItem()) return;
+      if (!state.started || !currentItem() || state.animating) return;
       if (!state.selected) {
         selectCurrent();
       }
@@ -1252,13 +1297,13 @@
       state.currentAttempts += 1;
       const firstTry = state.currentAttempts === 1;
       if (material === item.material) {
-        handleCorrect(item, firstTry);
+        handleCorrect(item, firstTry, material);
       } else {
         handleWrong(item);
       }
     }
 
-    function handleCorrect(item, firstTry) {
+    function handleCorrect(item, firstTry, chosenMaterial) {
       const stage = activeStage();
       const duration = getDurationForCurrentItem();
       const fastBonus = duration && state.tokenX < tokenBounds().center + 24 ? 20 : 0;
@@ -1294,7 +1339,32 @@
       setFeedback(message, "good");
       renderProgress();
       updateHud();
-      window.setTimeout(nextItem, 1050);
+      const animationDelay = animateCardToBin(chosenMaterial);
+      window.setTimeout(nextItem, animationDelay ? Math.max(animationDelay, 1050) : 1050);
+    }
+
+    function animateCardToBin(material) {
+      if (activeStage().name !== "1단계") return 0;
+      const targetBin = Array.from(document.querySelectorAll(".bin"))
+        .find((bin) => bin.textContent.trim() === material);
+      if (!targetBin) return 0;
+
+      const tokenRect = els.token.getBoundingClientRect();
+      const binRect = targetBin.getBoundingClientRect();
+      const tokenCenterX = tokenRect.left + tokenRect.width / 2;
+      const tokenCenterY = tokenRect.top + tokenRect.height / 2;
+      const binCenterX = binRect.left + binRect.width / 2;
+      const binCenterY = binRect.top + binRect.height / 2;
+      const flyX = state.tokenX + (binCenterX - tokenCenterX);
+      const flyY = binCenterY - tokenCenterY;
+
+      state.animating = true;
+      targetBin.classList.add("catching");
+      els.token.classList.add("fly-to-bin");
+      els.token.style.setProperty("--fly-x", `${flyX}px`);
+      els.token.style.setProperty("--fly-y", `${flyY}px`);
+      window.setTimeout(() => targetBin.classList.remove("catching"), 760);
+      return 780;
     }
 
     function handleWrong(item) {
