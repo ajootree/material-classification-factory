@@ -861,6 +861,27 @@
       gap: 16px;
     }
 
+    .intro-note {
+      display: grid;
+      gap: 12px;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .intro-note p {
+      margin: 0;
+    }
+
+    .intro-note strong {
+      color: #d94141;
+    }
+
+    body.intro-open .game {
+      filter: blur(2px);
+      opacity: 0.42;
+      pointer-events: none;
+    }
+
     .result-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1038,7 +1059,7 @@
     }
   </style>
 </head>
-<body>
+<body class="intro-open">
   <main class="app">
     <header class="topbar">
       <div>
@@ -1579,6 +1600,7 @@
       state.stage3FirstTryCount = 0;
       state.masteredMaterials = new Set();
       state.currentItems = [];
+      document.body.classList.remove("intro-open");
       els.modal.classList.remove("show");
       beginStage();
     }
@@ -1908,6 +1930,20 @@
       });
     }
 
+    function showIntro() {
+      els.modalTitle.textContent = "물질을 보고 나누어요";
+      els.modalBody.innerHTML = `
+        <div class="intro-note">
+          <p>물체는 만든 <strong>물질의 종류</strong>에 따라 분류할 수 있어요.</p>
+          <p>가운데에 나오는 물체를 살펴보고, 아래에 있는 물질 상자를 눌러요.</p>
+          <p>색깔이나 모양보다 무엇으로 만들었는지 생각해 보세요.</p>
+        </div>
+        <button class="action primary" type="button" id="introStart">시작하기</button>
+      `;
+      els.modal.classList.add("show");
+      document.getElementById("introStart").addEventListener("click", startGame);
+    }
+
     function showReview(title, body, onNext) {
       const cards = state.wrongObjects.length
         ? state.wrongObjects.map((item) => reviewCard(item)).join("")
@@ -2014,6 +2050,7 @@
     renderProgress();
     renderStageHeader();
     updateHud();
+    showIntro();
   </script>
 </body>
 </html>
