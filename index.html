@@ -1078,9 +1078,6 @@
         <div class="stage-strip">
           <div class="stage-info">
             <span class="pill blue" id="stageName">1단계</span>
-            <span class="pill" id="stageMode">멈춰서 분류</span>
-            <span class="pill green" id="roundName">연습판</span>
-            <span class="pill" id="speedName">멈춤</span>
           </div>
           <div class="actions stage-actions">
             <button class="action warn" id="hintButton" type="button">힌트</button>
@@ -1229,7 +1226,6 @@
       {
         name: "1단계",
         goal: "물체와 물질의 관계를 이해하고 조작법을 익혀요.",
-        mode: "멈춰서 분류",
         materials: ["나무", "금속"],
         passText: "8개를 모두 분류했어요.",
         speed: 0,
@@ -1248,7 +1244,6 @@
       {
         name: "2단계",
         goal: "여러 물질을 비교하여 스스로 분류해요.",
-        mode: "물질 비교",
         passFirstTry: 10,
         rounds: [
           {
@@ -1272,8 +1267,6 @@
       {
         name: "3단계",
         goal: "배운 모든 물질을 빠르고 정확하게 구별해요.",
-        mode: "종합 도전",
-        roundLabel: "달인 도전",
         materials: ["나무", "금속", "유리", "플라스틱", "고무", "가죽", "종이", "밀가루"],
         speed: 6000,
         moving: true,
@@ -1332,9 +1325,6 @@
       firstTry: document.getElementById("firstTry"),
       streak: document.getElementById("streak"),
       stageName: document.getElementById("stageName"),
-      stageMode: document.getElementById("stageMode"),
-      roundName: document.getElementById("roundName"),
-      speedName: document.getElementById("speedName"),
       beltZone: document.getElementById("beltZone"),
       token: document.getElementById("objectToken"),
       objectIcon: document.getElementById("objectIcon"),
@@ -1561,13 +1551,8 @@
 
     function renderStageHeader() {
       const stage = activeStage();
-      const round = activeRound();
       els.stageGoal.textContent = stage.goal;
       els.stageName.textContent = stage.name;
-      els.stageMode.textContent = stage.mode;
-      els.roundName.textContent = stage.rounds ? round.name : (stage.roundLabel || "연습판");
-      const duration = getDurationForCurrentItem();
-      els.speedName.textContent = duration ? (duration <= 5200 ? "빠른 벨트" : "천천히 이동") : "멈춤";
       els.hintButton.disabled = stage.stageIndex === 0;
       els.beltZone.classList.toggle("show-center-line", stage.stageIndex === 0);
     }
