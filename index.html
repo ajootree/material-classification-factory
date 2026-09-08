@@ -818,6 +818,45 @@
       filter: drop-shadow(0 4px 4px rgba(61, 49, 82, 0.16));
     }
 
+    .mistake-focus {
+      display: grid;
+      grid-template-columns: minmax(112px, 150px) minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 14px;
+      border: 2px solid #ffd58f;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fffdf8, #fff3df);
+    }
+
+    .mistake-art {
+      width: 100%;
+      aspect-ratio: 1.12;
+      border-radius: 8px;
+      background-color: #ffffff;
+      background-image: url("assets/object-sprites.png");
+      background-repeat: no-repeat;
+      background-size: 600% 500%;
+      box-shadow: inset 0 0 0 2px rgba(255, 190, 93, 0.35), 0 8px 16px rgba(61, 49, 82, 0.14);
+      filter: drop-shadow(0 6px 7px rgba(61, 49, 82, 0.14));
+    }
+
+    .mistake-copy {
+      display: grid;
+      gap: 8px;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .mistake-copy strong {
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .mistake-copy p {
+      margin: 0;
+    }
+
     .modal {
       position: fixed;
       inset: 0;
@@ -874,6 +913,17 @@
 
     .intro-note strong {
       color: #d94141;
+    }
+
+    @media (max-width: 560px) {
+      .mistake-focus {
+        grid-template-columns: 1fr;
+      }
+
+      .mistake-art {
+        width: min(210px, 100%);
+        justify-self: center;
+      }
     }
 
     body.intro-open .game {
@@ -1285,8 +1335,8 @@
     ];
 
     const readingDelay = {
-      stage1Correct: 2800,
-      movingCorrect: 4800
+      stage1Correct: 2200,
+      movingCorrect: 2600
     };
 
     const state = {
@@ -1806,7 +1856,7 @@
       setFeedback(`이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, "try");
       renderProgress();
       updateHud();
-      showMistakeModal("같이 살펴보기", `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
+      showMistakeModal("같이 살펴보기", item, `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
     }
 
     function animateCardToBin(material) {
@@ -1863,7 +1913,7 @@
       els.token.classList.add("selected");
       renderProgress();
       updateHud();
-      showMistakeModal("다시 살펴보기", `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
+      showMistakeModal("다시 살펴보기", item, `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
     }
 
     function finishRoundOrStage() {
@@ -1906,10 +1956,16 @@
       });
     }
 
-    function showMistakeModal(title, body, onNext) {
+    function showMistakeModal(title, item, body, onNext) {
       els.modalTitle.textContent = title;
       els.modalBody.innerHTML = `
-        <p>${body}</p>
+        <div class="mistake-focus">
+          <span class="mistake-art" style="background-position: ${spritePosition(item)}" aria-hidden="true"></span>
+          <div class="mistake-copy">
+            <strong>${item.name} → ${item.material}</strong>
+            <p>${body}</p>
+          </div>
+        </div>
         <button class="action primary" type="button" id="modalNext">다음</button>
       `;
       els.modal.classList.add("show");
