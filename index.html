@@ -327,12 +327,12 @@
     }
 
     .belt-zone.conveyor-running .belt {
-      animation: beltTravel 780ms linear infinite;
+      animation: beltTravel 1080ms linear infinite;
     }
 
     .belt-zone.conveyor-running .belt::before,
     .belt-zone.conveyor-running .belt::after {
-      animation: rollerSpin 780ms linear infinite;
+      animation: rollerSpin 1080ms linear infinite;
     }
 
     .belt-zone.conveyor-running .belt-speed-lines {
@@ -340,18 +340,18 @@
     }
 
     .belt-zone.conveyor-running .belt-speed-lines span {
-      animation: speedLine 900ms linear infinite;
+      animation: speedLine 1160ms linear infinite;
     }
 
     .belt-zone.conveyor-fast .belt,
     .belt-zone.conveyor-fast .belt::before,
     .belt-zone.conveyor-fast .belt::after {
-      animation-duration: 520ms;
+      animation-duration: 410ms;
     }
 
     .belt-zone.conveyor-fast .belt-speed-lines span {
-      animation-duration: 620ms;
-      background: rgba(245, 158, 66, 0.36);
+      animation-duration: 430ms;
+      background: rgba(245, 158, 66, 0.5);
     }
 
     .belt-zone.conveyor-stopped .belt {
@@ -1250,7 +1250,7 @@
             name: "기본 재료",
             materials: ["나무", "금속", "유리", "플라스틱"],
             itemsPerMaterial: 2,
-            speed: 8200,
+            speed: 9400,
             moving: true,
             allowEdgePause: true
           },
@@ -1258,7 +1258,7 @@
             name: "생활 재료",
             materials: ["고무", "가죽", "종이", "밀가루"],
             itemsPerMaterial: 2,
-            speed: 7600,
+            speed: 9000,
             moving: true,
             allowEdgePause: true
           }
@@ -1565,8 +1565,11 @@
         return round.lightningSpeed;
       }
       const baseSpeed = round.speed || stage.speed || 0;
-      if (stage.stageIndex === 1 && state.streak >= 3) return Math.max(6200, baseSpeed - 1200);
-      return round.speed || stage.speed || 0;
+      if (stage.stageIndex === 1 && state.streak >= 3) {
+        const boostSteps = Math.min(2, Math.floor((state.streak - 3) / 3));
+        return Math.max(5000, baseSpeed - 3200 - boostSteps * 600);
+      }
+      return baseSpeed;
     }
 
     function startGame() {
@@ -1645,7 +1648,8 @@
       state.duration = duration;
       state.tokenStart = performance.now();
       state.running = true;
-      setConveyorMotion(duration <= 5200 ? "fast" : "running");
+      const speedBoosted = activeStage().stageIndex === 1 && state.streak >= 3;
+      setConveyorMotion(speedBoosted || duration <= 5200 ? "fast" : "running");
       tick();
     }
 
@@ -1759,7 +1763,7 @@
         message += " 3개 연속 정답! +50점";
       }
       if (stage.name === "2단계" && state.streak % 3 === 0) {
-        message += " 컨베이어가 살짝 빨라졌어요.";
+        message += " 다음 물체부터 컨베이어가 더 빨라져요.";
       }
       setFeedback(message, "good");
       renderProgress();
