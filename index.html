@@ -597,10 +597,11 @@
       grid-template-rows: auto auto auto;
       overflow: hidden;
       background: linear-gradient(180deg, #ffffff, #fff7fc);
+      box-shadow: inset 8px 0 0 rgba(255, 173, 102, 0.2);
     }
 
     .panel-section {
-      padding: 16px;
+      padding: 20px;
       border-bottom: 3px solid #f1dcec;
     }
 
@@ -609,7 +610,7 @@
     }
 
     .question {
-      min-height: 132px;
+      min-height: 158px;
       display: grid;
       align-content: center;
       gap: 8px;
@@ -621,8 +622,8 @@
 
     .question h2 {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.25;
+      font-size: 23px;
+      line-height: 1.38;
       letter-spacing: 0;
     }
 
@@ -635,18 +636,21 @@
       background: linear-gradient(180deg, #fff3ac, #ffe783);
       border: 2px solid rgba(255, 173, 102, 0.35);
       font-weight: 400;
+      font-size: 17px;
       word-break: keep-all;
       box-shadow: 0 4px 0 rgba(255, 173, 102, 0.18);
     }
 
     .feedback {
-      min-height: 72px;
-      border: 3px solid #f0d5e6;
+      min-height: 138px;
+      border: 4px solid #f0d5e6;
       border-radius: 8px;
-      padding: 12px;
+      padding: 18px;
       background: #fffaf3;
       font-weight: 400;
-      line-height: 1.45;
+      font-size: 18px;
+      line-height: 1.65;
+      box-shadow: 0 8px 0 rgba(76, 66, 99, 0.08);
     }
 
     .feedback.good {
@@ -1014,15 +1018,18 @@
       }
 
       .panel-section {
-        padding: 12px;
+        padding: 14px;
       }
 
       .question {
-        min-height: auto;
+        min-height: 132px;
       }
 
       .feedback {
-        min-height: 56px;
+        min-height: 128px;
+        padding: 15px;
+        font-size: 17px;
+        line-height: 1.6;
       }
 
       .result-grid {
@@ -1169,11 +1176,11 @@
       {
         name: "2단계",
         goal: "여러 물질을 비교하여 스스로 분류해요.",
-        mode: "4개씩 두 번",
+        mode: "물질 비교",
         passFirstTry: 6,
         rounds: [
           {
-            name: "1라운드",
+            name: "기본 재료",
             materials: ["나무", "금속", "유리", "플라스틱"],
             speed: 8200,
             moving: true,
@@ -1186,16 +1193,16 @@
             ]
           },
           {
-            name: "2라운드",
-            materials: ["나무", "금속", "유리", "플라스틱"],
+            name: "생활 재료",
+            materials: ["고무", "가죽", "종이", "밀가루"],
             speed: 7600,
             moving: true,
             allowEdgePause: true,
             objects: [
-              obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
-              obj("가위", "metalScissors", "금속", "가위의 날은 금속이에요."),
-              obj("병", "glassBottle", "유리", "병은 유리로 만들 수 있어요."),
-              obj("바구니", "plasticBasket", "플라스틱", "바구니는 가벼운 플라스틱 물체예요.")
+              obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
+              obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
+              obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
+              obj("가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요.")
             ]
           }
         ]
@@ -1203,8 +1210,8 @@
       {
         name: "3단계",
         goal: "배운 모든 물질을 빠르고 정확하게 구별해요.",
-        mode: "8종류 한 번에",
-        roundLabel: "종합판",
+        mode: "종합 도전",
+        roundLabel: "달인 도전",
         materials: ["나무", "금속", "유리", "플라스틱", "고무", "가죽", "종이", "밀가루"],
         speed: 6000,
         moving: true,
@@ -1238,6 +1245,12 @@
       "손으로 만졌을 때 단단한지, 잘 늘어나는지 떠올려 보세요.",
       "생활에서 이 물체를 만들 때 쓰는 재료 이름을 찾아보세요."
     ];
+
+    const readingDelay = {
+      stage1Correct: 2800,
+      movingCorrect: 4200,
+      missed: 5600
+    };
 
     const state = {
       stageIndex: 0,
@@ -1476,7 +1489,7 @@
       els.stageMode.textContent = stage.mode;
       els.roundName.textContent = stage.rounds ? round.name : (stage.roundLabel || "연습판");
       const duration = getDurationForCurrentItem();
-      els.speedName.textContent = duration ? `${Math.round(duration / 1000)}초` : "멈춤";
+      els.speedName.textContent = duration ? (duration <= 5200 ? "빠른 벨트" : "천천히 이동") : "멈춤";
       els.hintButton.disabled = stage.stageIndex === 0;
       els.beltZone.classList.toggle("show-center-line", stage.stageIndex === 0);
     }
@@ -1597,14 +1610,10 @@
       state.pausedAtEdge = true;
       els.token.classList.add("timeout", "edge-fading");
       setConveyorMotion("stopped");
-      setFeedback("끝까지 갔어요. 잠깐 깜빡인 뒤 다시 나타나요.", "try");
+      setFeedback("잠깐! 지나간 물체를 함께 살펴볼게요.", "try");
       state.edgeTimer = window.setTimeout(() => {
         state.edgeTimer = null;
-        state.selected = false;
-        state.pausedAtEdge = false;
-        resetTokenVisual();
-        setFeedback("다시 왼쪽에서 나와요. 움직이는 물체를 잡고 분류해 보세요.", "try");
-        runConveyor();
+        handleMissedAtEdge();
       }, 2000);
     }
 
@@ -1692,7 +1701,44 @@
       renderProgress();
       updateHud();
       const animationDelay = animateCardToBin(chosenMaterial);
-      window.setTimeout(nextItem, animationDelay ? Math.max(animationDelay, 1050) : 1050);
+      const delay = stage.stageIndex === 0 ? readingDelay.stage1Correct : readingDelay.movingCorrect;
+      window.setTimeout(nextItem, animationDelay ? Math.max(animationDelay + 1200, delay) : delay);
+    }
+
+    function handleMissedAtEdge() {
+      const stage = activeStage();
+      const item = currentItem();
+      if (!item) return;
+
+      state.running = false;
+      state.selected = false;
+      state.pausedAtEdge = false;
+      state.currentAttempts = Math.max(state.currentAttempts, 1);
+      state.streak = 0;
+      state.completed[state.itemIndex] = { firstTry: false };
+
+      if (!state.materialStats[item.material]) state.materialStats[item.material] = { total: 0, first: 0, wrong: 0 };
+      state.materialStats[item.material].total += 1;
+      state.materialStats[item.material].wrong += 1;
+
+      const alreadyWrong = state.wrongObjects.some((wrong) => wrong.name === item.name);
+      if (!alreadyWrong) state.wrongObjects.push(item);
+
+      if (stage.name === "3단계") {
+        if (!state.finalStats[item.material]) state.finalStats[item.material] = { total: 0, first: 0, wrong: 0 };
+        state.finalStats[item.material].total += 1;
+        state.finalStats[item.material].wrong += 1;
+        const alreadyFinalWrong = state.finalWrongObjects.some((wrong) => wrong.name === item.name);
+        if (!alreadyFinalWrong) state.finalWrongObjects.push(item);
+      }
+
+      els.token.classList.remove("timeout", "edge-fading", "selected");
+      els.token.style.opacity = "0";
+      els.selectedName.textContent = `살펴본 물체: ${item.name}`;
+      setFeedback(`이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, "try");
+      renderProgress();
+      updateHud();
+      window.setTimeout(nextItem, readingDelay.missed);
     }
 
     function animateCardToBin(material) {
