@@ -440,16 +440,16 @@
       background:
         linear-gradient(180deg, #ffffff, #fff7df);
       box-shadow: 0 10px 0 rgba(76, 66, 99, 0.16), 0 18px 28px rgba(61, 49, 82, 0.2);
-      cursor: grab;
+      cursor: pointer;
       user-select: none;
-      touch-action: none;
+      touch-action: manipulation;
       transition: box-shadow 160ms ease, transform 160ms ease, outline-color 160ms ease;
     }
 
     .object-token.selected {
       outline: 5px solid rgba(255, 173, 102, 0.42);
       transform: translateY(-4px);
-      cursor: grabbing;
+      cursor: pointer;
     }
 
     .object-token.timeout {
@@ -1153,6 +1153,57 @@
       doughBowl: 29
     };
 
+    const materialPools = {
+      "나무": [
+        obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
+        obj("연필", "woodenPencil", "나무", "연필의 몸통은 주로 나무로 만들어요."),
+        obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
+        obj("야구방망이", "woodenBaseballBat", "나무", "야구방망이는 나무로 만든 물체예요.")
+      ],
+      "금속": [
+        obj("숟가락", "metalSpoon", "금속", "숟가락은 금속으로 만들었어요."),
+        obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
+        obj("가위", "metalScissors", "금속", "가위의 날은 금속으로 만들어요."),
+        obj("종", "metalBell", "금속", "종은 소리가 잘 나는 금속으로 만들어요.")
+      ],
+      "유리": [
+        obj("잔", "glassTumbler", "유리", "잔은 유리로 만든 물체예요."),
+        obj("병", "glassBottle", "유리", "병은 유리로 만들 수 있어요."),
+        obj("창문", "glassWindow", "유리", "창문에는 투명한 유리가 쓰여요."),
+        obj("컵", "glassCup", "유리", "컵은 유리로 만든 물체예요.")
+      ],
+      "플라스틱": [
+        obj("옷걸이", "plasticHanger", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요."),
+        obj("바구니", "plasticBasket", "플라스틱", "바구니는 가벼운 플라스틱 물체예요."),
+        obj("비닐봉지", "plasticBag", "플라스틱", "비닐봉지는 얇은 플라스틱으로 만들어요."),
+        obj("장난감", "plasticToy", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요.")
+      ],
+      "고무": [
+        obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
+        obj("줄", "rubberBand", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
+        obj("밴드", "rubberBand", "고무", "밴드는 탄성이 있는 고무 물체예요."),
+        obj("말랑 지우개", "rubberEraser", "고무", "말랑 지우개는 고무로 만들어요.")
+      ],
+      "가죽": [
+        obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
+        obj("가방", "leatherBag", "가죽", "가방은 가죽으로 만들 수 있어요."),
+        obj("신발", "leatherShoe", "가죽", "신발은 가죽을 다듬어 만들 수 있어요."),
+        obj("손가방", "leatherBag", "가죽", "손가방은 가죽으로 만들 수 있어요.")
+      ],
+      "종이": [
+        obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
+        obj("상자", "paperBox", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
+        obj("스케치북", "paperNotebook", "종이", "스케치북은 그림을 그리는 종이 묶음이에요."),
+        obj("포장 상자", "paperBox", "종이", "포장 상자는 두꺼운 종이를 접어 만들어요.")
+      ],
+      "밀가루": [
+        obj("가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
+        obj("반죽", "doughBowl", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요."),
+        obj("하얀 가루", "flourBag", "밀가루", "하얀 가루는 음식 재료인 밀가루예요."),
+        obj("빵 반죽", "doughBowl", "밀가루", "빵 반죽은 밀가루를 넣어 만들어요.")
+      ]
+    };
+
     const stages = [
       {
         name: "1단계",
@@ -1163,47 +1214,37 @@
         speed: 0,
         centerStop: true,
         objects: [
-          obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
-          obj("숟가락", "metalSpoon", "금속", "숟가락은 금속으로 만들었어요."),
-          obj("연필", "woodenPencil", "나무", "연필의 몸통은 주로 나무로 만들어요."),
-          obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
-          obj("의자", "woodenChair", "나무", "의자는 나무로 만들 수 있어요."),
-          obj("가위", "metalScissors", "금속", "가위의 날은 금속으로 만들어요."),
-          obj("야구방망이", "woodenBaseballBat", "나무", "야구방망이는 나무로 만든 물체예요."),
-          obj("종", "metalBell", "금속", "종은 소리가 잘 나는 금속으로 만들어요.")
+          materialPools["나무"][0],
+          materialPools["금속"][0],
+          materialPools["나무"][1],
+          materialPools["금속"][1],
+          materialPools["나무"][2],
+          materialPools["금속"][2],
+          materialPools["나무"][3],
+          materialPools["금속"][3]
         ]
       },
       {
         name: "2단계",
         goal: "여러 물질을 비교하여 스스로 분류해요.",
         mode: "물질 비교",
-        passFirstTry: 6,
+        passFirstTry: 10,
         rounds: [
           {
             name: "기본 재료",
             materials: ["나무", "금속", "유리", "플라스틱"],
+            itemsPerMaterial: 2,
             speed: 8200,
             moving: true,
-            allowEdgePause: true,
-            objects: [
-              obj("주걱", "woodenSpatula", "나무", "주걱은 나무로 만든 물체예요."),
-              obj("못", "metalNail", "금속", "못은 단단한 금속으로 만들어요."),
-              obj("잔", "glassTumbler", "유리", "잔은 유리로 만든 물체예요."),
-              obj("옷걸이", "plasticHanger", "플라스틱", "옷걸이는 플라스틱으로 만들 수 있어요.")
-            ]
+            allowEdgePause: true
           },
           {
             name: "생활 재료",
             materials: ["고무", "가죽", "종이", "밀가루"],
+            itemsPerMaterial: 2,
             speed: 7600,
             moving: true,
-            allowEdgePause: true,
-            objects: [
-              obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
-              obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
-              obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
-              obj("가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요.")
-            ]
+            allowEdgePause: true
           }
         ]
       },
@@ -1216,26 +1257,9 @@
         speed: 6000,
         moving: true,
         allowEdgePause: true,
-        lightningFrom: 12,
+        lightningFrom: 16,
         lightningSpeed: 4000,
-        objects: [
-          obj("젓가락", "woodenChopsticks", "나무", "젓가락은 나무로 만들 수 있어요."),
-          obj("책상", "woodenDesk", "나무", "책상은 나무를 다듬어 만들 수 있어요."),
-          obj("열쇠", "metalKey", "금속", "열쇠는 단단한 금속 물체예요."),
-          obj("캔", "metalCan", "금속", "캔은 얇은 금속으로 만들어요."),
-          obj("컵", "glassCup", "유리", "컵은 유리로 만든 물체예요."),
-          obj("전구", "glassLightBulb", "유리", "전구의 겉부분은 유리로 만들어요."),
-          obj("장난감", "plasticToy", "플라스틱", "장난감은 플라스틱으로 만들 수 있어요."),
-          obj("물병", "plasticBottle", "플라스틱", "가벼운 물병은 플라스틱으로 만들 수 있어요."),
-          obj("지우개", "rubberEraser", "고무", "지우개는 고무 물질로 만들어요."),
-          obj("줄", "rubberBand", "고무", "줄은 잘 늘어나는 고무로 만들 수 있어요."),
-          obj("구두", "leatherShoe", "가죽", "구두는 가죽으로 만들 수 있어요."),
-          obj("가방", "leatherBag", "가죽", "가방은 가죽으로 만들 수 있어요."),
-          obj("공책", "paperNotebook", "종이", "공책은 여러 장의 종이로 만들어요."),
-          obj("상자", "paperBox", "종이", "상자는 두꺼운 종이로 만들 수 있어요."),
-          obj("하얀 가루 봉지", "flourBag", "밀가루", "봉지 안의 하얀 가루는 밀가루예요."),
-          obj("반죽", "doughBowl", "밀가루", "반죽은 밀가루를 넣어 만들 수 있어요.")
-        ]
+        questionCount: 20
       }
     ];
 
@@ -1248,8 +1272,7 @@
 
     const readingDelay = {
       stage1Correct: 2800,
-      movingCorrect: 4200,
-      missed: 5600
+      movingCorrect: 4800
     };
 
     const state = {
@@ -1279,8 +1302,7 @@
       finalStats: {},
       stage2FirstTryCount: 0,
       stage3FirstTryCount: 0,
-      masteredMaterials: new Set(),
-      drag: null
+      masteredMaterials: new Set()
     };
 
     const els = {
@@ -1332,24 +1354,59 @@
         .map(({ item }) => item);
     }
 
-    function buildQuestionOrder(items) {
-      const groups = shuffleItems(items).reduce((map, item) => {
-        if (!map.has(item.material)) map.set(item.material, []);
-        map.get(item.material).push(item);
-        return map;
-      }, new Map());
-      const ordered = [];
-      let lastMaterial = "";
-      while (groups.size) {
-        const choices = [...groups.entries()]
-          .filter(([material]) => material !== lastMaterial || groups.size === 1)
-          .sort((a, b) => b[1].length - a[1].length || Math.random() - 0.5);
-        const [material, group] = choices[0];
-        ordered.push(group.shift());
-        lastMaterial = material;
-        if (!group.length) groups.delete(material);
+    function pickMaterialItems(material, count) {
+      const pool = shuffleItems(materialPools[material] || []);
+      const picked = [];
+      for (let i = 0; i < count; i += 1) {
+        picked.push(pool[i % pool.length]);
       }
-      return ordered;
+      return picked;
+    }
+
+    function buildRoundItems(round) {
+      if (round.questionCount) {
+        const baseCount = Math.floor(round.questionCount / round.materials.length);
+        const extraCount = round.questionCount % round.materials.length;
+        const extraMaterials = new Set(shuffleItems(round.materials).slice(0, extraCount));
+        return round.materials.flatMap((material) => (
+          pickMaterialItems(material, baseCount + (extraMaterials.has(material) ? 1 : 0))
+        ));
+      }
+      if (round.itemsPerMaterial) {
+        return round.materials.flatMap((material) => pickMaterialItems(material, round.itemsPerMaterial));
+      }
+      return round.objects || [];
+    }
+
+    function materialOrderScore(items) {
+      const materials = items.map((item) => item.material);
+      const unique = new Set(materials);
+      const strictlyAlternating = unique.size === 2 && materials.length > 3
+        && materials.every((material, index) => index === 0 || material !== materials[index - 1]);
+      let score = strictlyAlternating ? 100 : 0;
+      let run = 1;
+      for (let i = 1; i < materials.length; i += 1) {
+        run = materials[i] === materials[i - 1] ? run + 1 : 1;
+        if (run > 2) score += (run - 2) * 12;
+      }
+      return score;
+    }
+
+    function buildQuestionOrder(items) {
+      let best = shuffleItems(items);
+      let bestScore = materialOrderScore(best);
+      for (let i = 0; i < 80; i += 1) {
+        const candidate = shuffleItems(items);
+        const score = materialOrderScore(candidate);
+        if (score < bestScore) {
+          best = candidate;
+          bestScore = score;
+        }
+        if (score === 0) {
+          return candidate;
+        }
+      }
+      return best;
     }
 
     function activeStage() {
@@ -1528,7 +1585,7 @@
 
     function beginStage() {
       state.itemIndex = -1;
-      state.currentItems = buildQuestionOrder(activeRound().objects);
+      state.currentItems = buildQuestionOrder(buildRoundItems(activeRound()));
       state.completed = [];
       state.currentAttempts = 0;
       state.selected = false;
@@ -1558,7 +1615,7 @@
       els.token.setAttribute("aria-label", shouldShowNameOnBelt() ? `현재 물체 선택: ${item.name}` : "현재 물체 선택");
       els.selectedName.textContent = "물체를 선택해 보세요.";
       els.questionText.textContent = "이 물체는 주로 어떤 물질로 만들었을까요?";
-      setFeedback(activeStage().stageIndex === 0 ? "물체가 가운데에 멈추면 선택해 보세요." : "움직이는 물체를 잡고 알맞은 상자를 눌러요.");
+      setFeedback(activeStage().stageIndex === 0 ? "물체가 가운데에 멈추면 선택해 보세요." : "움직이는 물체를 고르고 알맞은 상자를 눌러요.");
       resetTokenVisual();
       renderStageHeader();
       renderProgress();
@@ -1738,11 +1795,10 @@
       setFeedback(`이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, "try");
       renderProgress();
       updateHud();
-      window.setTimeout(nextItem, readingDelay.missed);
+      showMistakeModal("같이 살펴보기", `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
     }
 
     function animateCardToBin(material) {
-      if (activeStage().name !== "1단계") return 0;
       const targetBin = Array.from(document.querySelectorAll(".bin"))
         .find((bin) => bin.textContent.trim() === material);
       if (!targetBin) return 0;
@@ -1766,20 +1822,37 @@
     }
 
     function handleWrong(item) {
+      const stage = activeStage();
       state.streak = 0;
       if (!state.materialStats[item.material]) state.materialStats[item.material] = { total: 0, first: 0, wrong: 0 };
       state.materialStats[item.material].wrong += 1;
       const alreadyWrong = state.wrongObjects.some((wrong) => wrong.name === item.name);
       if (!alreadyWrong) state.wrongObjects.push(item);
-      if (activeStage().name === "3단계") {
+      if (stage.name === "3단계") {
         if (!state.finalStats[item.material]) state.finalStats[item.material] = { total: 0, first: 0, wrong: 0 };
         state.finalStats[item.material].wrong += 1;
         const alreadyFinalWrong = state.finalWrongObjects.some((wrong) => wrong.name === item.name);
         if (!alreadyFinalWrong) state.finalWrongObjects.push(item);
       }
-      setFeedback(hintLines[(state.currentAttempts - 1) % hintLines.length], "try");
+
+      if (stage.stageIndex === 0) {
+        setFeedback(hintLines[(state.currentAttempts - 1) % hintLines.length], "try");
+        els.token.classList.add("selected");
+        updateHud();
+        return;
+      }
+
+      state.currentAttempts = Math.max(state.currentAttempts, 1);
+      state.completed[state.itemIndex] = { firstTry: false };
+      state.materialStats[item.material].total += 1;
+      if (stage.name === "3단계") {
+        state.finalStats[item.material].total += 1;
+      }
+      setFeedback(`이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요.`, "try");
       els.token.classList.add("selected");
+      renderProgress();
       updateHud();
+      showMistakeModal("다시 살펴보기", `이 물체는 ${item.name}이에요. ${item.material} 상자에 넣는 물체예요. ${item.explanation}`, nextItem);
     }
 
     function finishRoundOrStage() {
@@ -1822,6 +1895,19 @@
       });
     }
 
+    function showMistakeModal(title, body, onNext) {
+      els.modalTitle.textContent = title;
+      els.modalBody.innerHTML = `
+        <p>${body}</p>
+        <button class="action primary" type="button" id="modalNext">다음</button>
+      `;
+      els.modal.classList.add("show");
+      document.getElementById("modalNext").addEventListener("click", () => {
+        els.modal.classList.remove("show");
+        onNext();
+      });
+    }
+
     function showReview(title, body, onNext) {
       const cards = state.wrongObjects.length
         ? state.wrongObjects.map((item) => reviewCard(item)).join("")
@@ -1849,7 +1935,7 @@
     }
 
     function finishGame() {
-      const totalStage3 = stages[2].objects.length;
+      const totalStage3 = activeItems().length;
       const firstTryStage3 = state.stage3FirstTryCount;
       const allMaterials = ["나무", "금속", "유리", "플라스틱", "고무", "가죽", "종이", "밀가루"];
       const strong = [];
@@ -1912,50 +1998,7 @@
       selectCurrent();
     }
 
-    function pointerDown(event) {
-      if (!state.started) {
-        startGame();
-        return;
-      }
-      selectCurrent();
-      els.token.setPointerCapture(event.pointerId);
-      state.drag = {
-        id: event.pointerId,
-        offsetX: event.clientX - els.token.getBoundingClientRect().left,
-        offsetY: event.clientY - els.token.getBoundingClientRect().top
-      };
-    }
-
-    function pointerMove(event) {
-      if (!state.drag || state.drag.id !== event.pointerId) return;
-      const zone = els.beltZone.getBoundingClientRect();
-      const token = els.token.getBoundingClientRect();
-      const left = Math.max(0, Math.min(zone.width - token.width, event.clientX - zone.left - state.drag.offsetX));
-      const top = Math.max(80, Math.min(zone.height - token.height - 8, event.clientY - zone.top - state.drag.offsetY));
-      setTokenX(left);
-      els.token.style.top = `${top}px`;
-    }
-
-    function pointerUp(event) {
-      if (!state.drag || state.drag.id !== event.pointerId) return;
-      const tokenRect = els.token.getBoundingClientRect();
-      const bins = Array.from(document.querySelectorAll(".bin"));
-      const target = bins.find((bin) => {
-        const rect = bin.getBoundingClientRect();
-        const x = tokenRect.left + tokenRect.width / 2;
-        const y = tokenRect.top + tokenRect.height / 2;
-        return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-      });
-      state.drag = null;
-      if (target) {
-        chooseMaterial(target.textContent.trim());
-      }
-    }
-
     els.token.addEventListener("click", selectCurrent);
-    els.token.addEventListener("pointerdown", pointerDown);
-    els.token.addEventListener("pointermove", pointerMove);
-    els.token.addEventListener("pointerup", pointerUp);
     els.hintButton.addEventListener("click", showHint);
     els.nextButton.addEventListener("click", startGame);
     window.addEventListener("resize", () => {
